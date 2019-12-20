@@ -320,6 +320,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-/[Aa]ssets/
+
+/[Aa]ssets/*
+!/[Aa]ssets/Scripts*
 /ProjectSettings/
-![Aa]ssets/Scripts/
