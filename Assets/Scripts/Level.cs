@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
-    public bool completed;
-    public string title;
     public int index;
-    
-    void Start()
-    {
-        
-    }
-
+    public int stars;
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-using UnityEngine.Events;
 using TMPro;
+using UnityEngine.Events;
+
 
 [System.Serializable]
 public class LevelUiEvent : UnityEvent<LevelUI> {}
@@ -13,23 +13,26 @@ public class LevelUI : MonoBehaviour
 {
     public Level level;
     public int index;
-    public TMP_Text title;
+    public int stars;
+    public TMP_Text buttonText;
+    public LevelUiEvent onClicked;
 
-    public LevelUiEvent e;
     void Start()
     {
         if (level)
             Display(level);
+        buttonText = GetComponentInChildren<TMP_Text>();
+        buttonText.text = index.ToString();
     }
 
     public virtual void Display(Level lvl)
     {
         this.level = lvl;
         this.index = lvl.index;
-        this.title.text = lvl.title;
+        this.stars = lvl.stars;
     }
     public virtual void Click()
     {
-
+        onClicked.Invoke(this);
     }
 }

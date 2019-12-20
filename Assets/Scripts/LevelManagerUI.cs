@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LevelManagerUI : MonoBehaviour
 {
@@ -24,10 +25,22 @@ public class LevelManagerUI : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
-            foreach (Level lvl in levelManager.levels)
+        foreach (KeyValuePair<int,int> playerLevelData in PlayerData.starNumberPerLevel)
         {
             LevelUI ui = LevelUI.Instantiate(LevelUIPrefab, content);
-            ui.Display(lvl);
+            ui.onClicked.AddListener(UIClicked);
+            Debug.Log('v');
+            Level level = ui.gameObject.GetComponent<Level>();
+            level.index = playerLevelData.Key;
+            level.stars = playerLevelData.Value;
+            ui.Display(level);
+            if (level.stars == 0)
+                break;
         }
+    }
+
+    public virtual void UIClicked(LevelUI lvlUI)
+    { 
+        levelManager.EnterTheLevel(lvlUI.level);
     }
 }
