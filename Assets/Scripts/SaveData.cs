@@ -6,7 +6,7 @@ using UnityEngine;
 public class SaveData
 {
     public IDictionary<int, int> starNumberPerLevel;
-    List<Texture2D> levelPrototypes = new List<Texture2D>();
+    public List<Texture2D> levelPrototypes = new List<Texture2D>();
 
     public SaveData()
     {
@@ -20,7 +20,8 @@ public class SaveData
         
         while (Resources.Load<Texture2D>("Levels/" + i) != null)
         {
-            levelPrototypes.Add( Resources.Load<Texture2D>("Levels/" + i));
+            // var tex = Resources.Load<Texture2D>("Levels/" + i);
+            levelPrototypes.Add(Resources.Load<Texture2D>("Levels/" + i));
             if(initialLoad)
             starNumberPerLevel[i] = 1; //change to 0
             ++i;

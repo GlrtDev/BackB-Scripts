@@ -17,8 +17,10 @@ public class LevelManager : MonoBehaviour
         SaveData data = SaveGame.Load<SaveData>("data", new SaveData());
         PlayerData.starNumberPerLevel = data.starNumberPerLevel;
         PlayerData.numberOfLevels = data.starNumberPerLevel.Count;
-        if(!newGame)
-        PlayerData.levelPrototypes = data.LoadLevelsPrototypes(false);
+        if (!newGame)
+            PlayerData.levelPrototypes = data.LoadLevelsPrototypes(false);
+        else
+            PlayerData.levelPrototypes = data.levelPrototypes;
         //LoadLevelsFromPlayerData();
     }
 
