@@ -1,31 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
+[System.Serializable]
+public class PlayerUIEvent : UnityEvent { }
 
 public class PlayerBehavoir : MonoBehaviour
 {
     public Rigidbody rb;
     public ObjectPooler pool;
-    private static float angle = 0.0f;
     public GameObject[] playerSpawns;
+    public static int SpawnCount;
+    public IngameUI gameUI;
+
     public void Division()
     {
-        GameObject DividedBall = pool.GetPooledObject(0);
-        DividedBall.transform.position = gameObject.transform.position;
-        Rigidbody rigidbody1 = DividedBall.GetComponent<Rigidbody>();
-        DividedBall.SetActive(true);
-        rigidbody1.velocity = Quaternion.Euler(0, 0, 90) * rb.velocity;
-        rb.velocity = Quaternion.Euler(0, 0, -90) * rb.velocity;
-        //rigidbody1.angularVelocity = Vector3.zero;
-        //rigidbody1.velocity = Vector3.zero;
-        //rigidbody1.velocity = Quaternion.AngleAxis(90.0f, Vector3.up) * rigidbody1.velocity;
-        //DividedBall = pool.GetPooledObject(0);
-        //DividedBall.transform.position = gameObject.transform.position;
-        //rigidbody1 = DividedBall.GetComponentInChildren<Rigidbody>();
-        //rigidbody1.velocity = Quaternion.AngleAxis(-90.0f, Vector3.up) * gameObject.GetComponent<Rigidbody>().velocity;
-        // DividedBall.SetActive(true);
+        if (BallsLeft() > 0) {
+            GameObject DividedBall = pool.GetPooledObject(0);
+            DividedBall.transform.position = gameObject.transform.position;
+            Rigidbody rigidbody1 = DividedBall.GetComponent<Rigidbody>();
+            DividedBall.SetActive(true);
+            rigidbody1.velocity = Quaternion.Euler(0, 0, 90) * rb.velocity;
+            rb.velocity = Quaternion.Euler(0, 0, -90) * rb.velocity;
+        }
+    }
 
-
+    public static int BallsLeft()
+    {
+        return LevelGenerator.ballsToUse - SpawnCount;
     }
 
     public void MoveBalls(int direction)
@@ -47,22 +51,32 @@ public class PlayerBehavoir : MonoBehaviour
 
         //Debug.Log("PrintOnEnable: script was start");
     }
-
+    private void Awake()
+    {
+        GameObject UI =  GameObject.FindGameObjectWithTag("IngameUI");
+        gameUI = UI.GetComponent<IngameUI>();
+    }
     void OnEnable()
     {
         pool = GetComponentInParent<ObjectPooler>();
         rb = gameObject.GetComponent<Rigidbody>();
+        ++SpawnCount;
+        Debug.Log(" LOG: " + SpawnCount + " level shit: " + LevelGenerator.ballsToUse);
+        gameUI.UpdateText();
         //if (angle < 360.0f)
         //    angle += 45.0f;
-       // else
-       //     angle = 0.0f;
+        // else
+        //     angle = 0.0f;
         //rb.AddForce(new Vector3(1, 0, 0), ForceMode.Impulse);
-       // rb.velocity = Quaternion.AngleAxis(angle, Vector3.right) * new Vector3(1, -1, 0);
+        // rb.velocity = Quaternion.AngleAxis(angle, Vector3.right) * new Vector3(1, -1, 0);
         //rb.velocity = Vector3.zero;
-       // Debug.Log("PrintOnEnable: script was enabled");
+        // Debug.Log("PrintOnEnable: script was enabled");
     }
     private void OnDisable()
     {
+        --SpawnCount;
+        //IngameUI.playerUIEvent.Invoke();
+        gameUI.UpdateText();
         //animation of destrofying
     }
     // void OnCollisionEnter(Collision collision)
@@ -70,9 +84,9 @@ public class PlayerBehavoir : MonoBehaviour
     //Vector3 newSpeed = -rb.velocity;
     // rb.velocity = 2*(-rb.velocity);
     //  }
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.tag == "block")
-        rb.velocity = -rb.velocity;
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if(other.gameObject.tag == "block")
+    //    rb.velocity = -rb.velocity;
+    //}
 }

@@ -29,7 +29,7 @@ public class LevelManagerUI : MonoBehaviour
         {
             LevelUI ui = LevelUI.Instantiate(LevelUIPrefab, content);
             ui.onClicked.AddListener(UIClicked);
-            Debug.Log('v');
+            //Debug.Log('v');
             Level level = ui.gameObject.GetComponent<Level>();
             level.index = playerLevelData.Key;
             level.stars = playerLevelData.Value;

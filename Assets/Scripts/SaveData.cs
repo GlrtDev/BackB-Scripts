@@ -29,7 +29,7 @@ public class SaveData
 
         foreach (Object o in levelPrototypes)
         {
-            Debug.Log(o);
+            //Debug.Log(o);
         }
         return levelPrototypes;
     }
