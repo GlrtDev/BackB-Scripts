@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
@@ -14,7 +11,7 @@ public class PlayerBehavoir : MonoBehaviour
     public GameObject[] playerSpawns;
     public static int SpawnCount;
     public IngameUI gameUI;
-
+    private Vector3 oneUnitVector = new Vector3(0.5f, 0.5f, 0.5f);
     public void Division()
     {
         if (BallsLeft() > 0) {
@@ -24,6 +21,12 @@ public class PlayerBehavoir : MonoBehaviour
             DividedBall.SetActive(true);
             rigidbody1.velocity = Quaternion.Euler(0, 0, 90) * rb.velocity;
             rb.velocity = Quaternion.Euler(0, 0, -90) * rb.velocity;
+            iTween.ScaleTo(this.gameObject, iTween.Hash(
+                "scale", oneUnitVector,
+                "time", 0.3f));
+            iTween.ScaleTo(DividedBall, iTween.Hash(
+                "scale", oneUnitVector,
+                "time", 0.3f));
         }
     }
 
@@ -51,11 +54,13 @@ public class PlayerBehavoir : MonoBehaviour
 
         //Debug.Log("PrintOnEnable: script was start");
     }
+
     private void Awake()
     {
         GameObject UI =  GameObject.FindGameObjectWithTag("IngameUI");
         gameUI = UI.GetComponent<IngameUI>();
     }
+
     void OnEnable()
     {
         pool = GetComponentInParent<ObjectPooler>();
@@ -72,6 +77,7 @@ public class PlayerBehavoir : MonoBehaviour
         //rb.velocity = Vector3.zero;
         // Debug.Log("PrintOnEnable: script was enabled");
     }
+
     private void OnDisable()
     {
         --SpawnCount;
@@ -79,14 +85,32 @@ public class PlayerBehavoir : MonoBehaviour
         gameUI.UpdateText();
         //animation of destrofying
     }
-    // void OnCollisionEnter(Collision collision)
-    //{
-    //Vector3 newSpeed = -rb.velocity;
-    // rb.velocity = 2*(-rb.velocity);
-    //  }
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if(other.gameObject.tag == "block")
-    //    rb.velocity = -rb.velocity;
-    //}
+    private void Update()
+    {
+        if (Input.touchCount > 0)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                Vector3 camPosition = Input.touches[i].position;
+                camPosition.z = 63.9f; // distance from player to camera on Z axis
+                Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
+                Vector3 playerPos = transform.position;
+                touchPos.z = 0; playerPos.z = 0;
+                if ((touchPos - playerPos).magnitude < 0.5f)
+                    if(Input.touches[i].phase == TouchPhase.Began)
+                    Division(); 
+            }
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 playerPos = transform.position;
+            Vector3 camPosition = Input.mousePosition;
+            camPosition.z = 63.9f;
+            Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
+            touchPos.z = 0; playerPos.z = 0;
+            if ((touchPos - playerPos).magnitude < 0.5f)
+                Division();
+            Debug.Log("touch: " + touchPos + " player: " + playerPos);
+        }
+    }
 }
