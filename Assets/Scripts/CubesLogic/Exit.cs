@@ -4,27 +4,33 @@ using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 [System.Serializable]
-public class ExitBlockEvent : UnityEvent<Exit> { }
+public class ExitBlockEvent : UnityEvent { }
 
 public class Exit : Cube
 {
-    public ExitBlockEvent onColl;
-    int ballsNeededToFill;
-    int amountIn = 0;
+    public ExitBlockEvent ballAndExitCollision;
+
+    int amountIn;
     public TMP_Text text;
 
     public virtual void OnEnable()
     {
-        // base.OnEnable();
         Init();
         UpdateText();
     }
 
-    public virtual void Init() {
-        amountIn = 0;
-        ballsNeededToFill = 1;
+    public override void Awake()
+    {
+        ballsNeededToAction = 1;
+        base.Awake();
+        Debug.Log("exit init");
+        UpdateText();
     }
-    public override void OnCollisionEnter(Collision collision)
+    public virtual void Init() {
+       amountIn = 0;
+       //ballsNeededToAction = 1;
+    }
+    public void OnCollisionEnter(Collision collision)
     {
         
         if (collision.collider.tag == "Player")
@@ -39,7 +45,7 @@ public class Exit : Cube
             }
             else
                 iTween.ColorFrom(this.gameObject, Color.black, 0.5f);
-            onColl.Invoke(this);
+            ballAndExitCollision.Invoke();
         }
     }
 
@@ -50,7 +56,7 @@ public class Exit : Cube
     }
     public virtual bool isFull()
     {
-        if (amountIn >= ballsNeededToFill)
+        if (amountIn >= ballsNeededToAction)
         {
             Close();
             return true;
@@ -65,11 +71,11 @@ public class Exit : Cube
 
     public virtual void UpdateText()
     {
-        text.text = (ballsNeededToFill - amountIn).ToString();
+        text.text = (ballsNeededToAction - amountIn).ToString();
     }
 
     public virtual int Capacity()
     {
-        return ballsNeededToFill;
+        return ballsNeededToAction;
     }
 }
