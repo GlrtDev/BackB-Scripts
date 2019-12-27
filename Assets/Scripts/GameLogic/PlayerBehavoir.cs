@@ -9,12 +9,15 @@ public class PlayerBehavoir : MonoBehaviour
     public Rigidbody rb;
     public ObjectPooler pool;
     public GameObject[] playerSpawns;
-    public static int SpawnCount;
+    public static int spawnCount;
+    public static int numberOfMoves;
     public IngameUI gameUI;
     private Vector3 oneUnitVector = new Vector3(0.5f, 0.5f, 0.5f);
+
     public void Division()
     {
         if (BallsLeft() > 0) {
+            numberOfMoves++;
             GameObject DividedBall = pool.GetPooledObject(0);
             DividedBall.transform.position = gameObject.transform.position;
             Rigidbody rigidbody1 = DividedBall.GetComponent<Rigidbody>();
@@ -32,13 +35,14 @@ public class PlayerBehavoir : MonoBehaviour
 
     public static int BallsLeft()
     {
-        return LevelGenerator.ballsToUse - SpawnCount;
+        return LevelGenerator.ballsToUse - spawnCount;
     }
 
     public void MoveBalls(int direction)
     {
         //pool = GetComponentInParent<ObjectPooler>();
         // rb = GetComponent<Rigidbody>();
+        numberOfMoves++;
         playerSpawns = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject playerSpawn in playerSpawns)
         {
@@ -65,8 +69,8 @@ public class PlayerBehavoir : MonoBehaviour
     {
         pool = GetComponentInParent<ObjectPooler>();
         rb = gameObject.GetComponent<Rigidbody>();
-        ++SpawnCount;
-        Debug.Log(" LOG: " + SpawnCount + " level shit: " + LevelGenerator.ballsToUse);
+        ++spawnCount;
+        Debug.Log(" LOG: " + spawnCount + " level shit: " + LevelGenerator.ballsToUse);
         gameUI.UpdateText();
         //if (angle < 360.0f)
         //    angle += 45.0f;
@@ -80,11 +84,12 @@ public class PlayerBehavoir : MonoBehaviour
 
     private void OnDisable()
     {
-        --SpawnCount;
+        --spawnCount;
         //IngameUI.playerUIEvent.Invoke();
         gameUI.UpdateText();
         //animation of destrofying
     }
+
     private void Update()
     {
         if (Input.touchCount > 0)
@@ -112,5 +117,18 @@ public class PlayerBehavoir : MonoBehaviour
                 Division();
             Debug.Log("touch: " + touchPos + " player: " + playerPos);
         }
+    }
+    public void Deactivate()
+    {
+        iTween.ScaleTo(this.gameObject, iTween.Hash(
+                "scale", Vector3.zero,
+                "time", 0.1f,
+                "oncomplete", "SetUnactive",
+                "oncompletetarget", this.gameObject
+                ));
+    }
+    private void SetUnactive()
+    {
+        this.gameObject.SetActive(false);
     }
 }
