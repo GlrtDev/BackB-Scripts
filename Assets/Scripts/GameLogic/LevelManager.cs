@@ -6,13 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    //public List<Level> levels;
-    public List<Texture2D> levelPrototypes = new List<Texture2D>();
+    private List<Texture2D> levelPrototypes = new List<Texture2D>();
     public void Awake()
     {
         SaveData data = SaveGame.Load<SaveData>("data", new SaveData());
         PlayerData.starNumberPerLevel = data.starNumberPerLevel;
-        
+
         PlayerData.levelPrototypes = LoadLevelsPrototypes();
         //LoadLevelsFromPlayerData();
     }
@@ -34,22 +33,28 @@ public class LevelManager : MonoBehaviour
 
     public List<Texture2D> LoadLevelsPrototypes() //TODO
     {
-        int i = 1;
+        int i = 0;
+        
         while (Resources.Load<Texture2D>("Levels/" + i) != null)
         {
-            levelPrototypes.Add(Resources.Load<Texture2D>("Levels/" + i));
+           levelPrototypes.Add(Resources.Load<Texture2D>("Levels/" + i));
             ++i;
         }
-        while(levelPrototypes.Count >= PlayerData.starNumberPerLevel.Count)
+
+        //check if there were levels in game version
+        while(levelPrototypes.Count > PlayerData.starNumberPerLevel.Count)
         {
-            PlayerData.starNumberPerLevel.Add(PlayerData.starNumberPerLevel.Count + 1, 0);
+            PlayerData.starNumberPerLevel.Add(0);
         }
 
-        foreach (Object o in levelPrototypes)
-        {
-            //Debug.Log(o);
-        }
+        Debug.Log(PlayerData.starNumberPerLevel);
+        Debug.Log(PlayerData.starNumberPerLevel.Count);
+        //foreach (Object o in levelPrototypes)
+        //{
+        //    Debug.Log(o);
+        //}
         return levelPrototypes;
     }
 
+    
 }

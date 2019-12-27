@@ -8,6 +8,7 @@ public class LevelManagerUI : MonoBehaviour
     public LevelManager levelManager;
     public Transform content;
     public LevelUI LevelUIPrefab;
+    public bool UnlockAllLevels;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,17 +26,21 @@ public class LevelManagerUI : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
-        foreach (KeyValuePair<int,int> playerLevelData in PlayerData.starNumberPerLevel)
+        for (int i = 0; i < PlayerData.starNumberPerLevel.Count; i++)
         {
-            LevelUI ui = LevelUI.Instantiate(LevelUIPrefab, content);
-            ui.onClicked.AddListener(UIClicked);
-            //Debug.Log('v');
-            Level level = ui.gameObject.GetComponent<Level>();
-            level.index = playerLevelData.Key;
-            level.stars = playerLevelData.Value;
-            ui.Display(level);
-            if (level.stars == 0)
-                break;
+            int playerLevelData = PlayerData.starNumberPerLevel[i];
+
+                LevelUI ui = LevelUI.Instantiate(LevelUIPrefab, content);
+                ui.onClicked.AddListener(UIClicked);
+                //Debug.Log('v');
+                Level level = ui.gameObject.GetComponent<Level>();
+                level.index = i;
+                level.stars = playerLevelData;
+                ui.Display(level);
+            if(!UnlockAllLevels)
+                if (level.stars == 0)
+                    break;
+            
         }
     }
 

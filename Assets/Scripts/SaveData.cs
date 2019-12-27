@@ -1,14 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 [System.Serializable]
 public class SaveData
 {
-    public IDictionary<int, int> starNumberPerLevel;
+    public List<int> starNumberPerLevel;
 
     public SaveData()
     {
-        starNumberPerLevel.Add(1, 0);
+        starNumberPerLevel = new List<int>();
+        starNumberPerLevel.Add(0); // 1 for test
+    }
+
+    public SaveData(List<int> stars)
+    {
+        starNumberPerLevel = stars;
     }
 }
