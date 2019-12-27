@@ -13,23 +13,14 @@ public class Exit : Cube
     int amountIn;
     public TMP_Text text;
 
-    public virtual void OnEnable()
+    public override void OnEnable()
     {
-        Init();
+        amountIn = 0;
+        ballsNeededToAction = 1;
+        base.OnEnable();
         UpdateText();
     }
 
-    public override void Awake()
-    {
-        ballsNeededToAction = 1;
-        base.Awake();
-        Debug.Log("exit init");
-        UpdateText();
-    }
-    public virtual void Init() {
-       amountIn = 0;
-       //ballsNeededToAction = 1;
-    }
     public void OnCollisionEnter(Collision collision)
     {
         

@@ -6,9 +6,9 @@ public class DeathCube : Cube
 {
     LevelGenerator levelGenerator;
 
-    public override void Awake()
+    public override void OnEnable()
     {
-        base.Awake();
+        base.OnEnable();
         levelGenerator = GetComponentInParent<LevelGenerator>();
     }
 

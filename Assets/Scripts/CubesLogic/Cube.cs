@@ -8,7 +8,7 @@ public class Cube : MonoBehaviour
     [HideInInspector]
     public int ballsNeededToAction;
 
-    public virtual void Awake()
+    public virtual void OnEnable()
     {
         CubeMixin[] mixins = GetComponents<CubeMixin>();
         foreach (CubeMixin mixin in mixins)
@@ -16,5 +16,9 @@ public class Cube : MonoBehaviour
             mixin.cube = this;
             mixin.LoadMixin();
         }
+    }
+    public virtual void OnDisable()
+    {
+        iTween.Stop(this.gameObject);
     }
 }
