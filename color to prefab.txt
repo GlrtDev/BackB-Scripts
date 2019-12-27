@@ -1,0 +1,25 @@
+white - player FFFFFF
+
+
+black - block 000000
+Move
+	Left
+		1 010101
+	Right
+		1 020202
+	Up
+		1 030303
+	Down
+		1 040404
+
+
+green (0,255,0,255) - exit 00FF00
+capacity
+	+1 variant 00FA00
+
+
+red(255,0,0,0) - killblock FF0000
+
+
+red(250,0,0,0) - deathblock FA0000
+
