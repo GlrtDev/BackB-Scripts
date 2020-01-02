@@ -53,7 +53,7 @@ public class LevelGenerator : MonoBehaviour {
                 "easetype", iTween.EaseType.easeInOutQuint,
                 "time", 1.0f));
     }
-
+     
 	void GenerateLevel ()
 	{
         floorNumber.text = PlayerData.currentLevel.ToString();
@@ -61,6 +61,11 @@ public class LevelGenerator : MonoBehaviour {
                 "scale", Vector3.one,
                 "easetype", iTween.EaseType.easeInOutQuint,
                 "time", 1.0f));
+        //floor.gameObject.transform.localScale = new Vector3(11, 16, 1);
+        iTween.ScaleTo(floor.gameObject, iTween.Hash(
+                "scale", new Vector3(11, 16, 1),
+                "easetype", iTween.EaseType.easeInOutQuint,
+                "time", 0.3f));
 
         for (int i = 0; i < gameObject.transform.childCount; i++) // delete previous
             transform.GetChild(i).gameObject.SetActive(false);
@@ -199,12 +204,12 @@ public class LevelGenerator : MonoBehaviour {
 
     public void RotateFloor()
     {
-        iTween.RotateFrom(floor.gameObject, iTween.Hash(
-            "rotation", new Vector3(180, 0, 0),
+        iTween.ScaleTo(floor.gameObject, iTween.Hash(
+            "scale", new Vector3(22,32, 1),
             "oncomplete", "GenerateLevel",
             "oncompletetarget", this.gameObject,
-            "easetype", iTween.EaseType.easeOutCubic,
-            "time", 2.0f));
+           "easetype", iTween.EaseType.easeOutCubic,
+            "time", 1.0f));
     }
 
     public static int StarsAcquired()
