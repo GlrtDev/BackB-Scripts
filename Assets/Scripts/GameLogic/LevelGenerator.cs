@@ -22,11 +22,13 @@ public class LevelGenerator : MonoBehaviour {
 
     public static int movesFor3Stars;
     // Use this for initialization
-
-
+    public Material backgroundMat;
+    public Material cubeMat;
+    public Material floorMat;
+    // public Light subLight;
 
     void Start () {
-        if(!testGo)
+        if (!testGo)
         GetMap(PlayerData.currentLevel); //Uncomment on Relese
 
         PlayerBehavoir.spawnCount = 0;
@@ -61,12 +63,33 @@ public class LevelGenerator : MonoBehaviour {
                 "scale", Vector3.one,
                 "easetype", iTween.EaseType.easeInOutQuint,
                 "time", 1.0f));
+
         //floor.gameObject.transform.localScale = new Vector3(11, 16, 1);
         iTween.ScaleTo(floor.gameObject, iTween.Hash(
                 "scale", new Vector3(11, 16, 1),
                 "easetype", iTween.EaseType.easeInOutQuint,
                 "time", 0.3f));
 
+        int nr = PlayerData.currentLevel % 10;
+        Texture2D texNow = Resources.Load<Texture2D>("Backgrounds/Background" + nr); ;
+
+        backgroundMat.mainTexture = texNow;
+        Vector2 randOffset = new Vector2(Random.value, Random.value);
+        backgroundMat.SetTextureOffset("_FlowMap", randOffset);
+        cubeMat.mainTexture = texNow;
+        floorMat.SetTexture("_TexMat1", floorMat.GetTexture("_TexMat2"));
+        floorMat.SetTexture("_TexMat2", texNow); //new texture
+        floorMat.SetFloat("_Blend", 0.0f);
+        
+        iTween.ValueTo(floor.gameObject, iTween.Hash( //lerpingMat
+                "from", 0.0f,
+                "to", 1.0f,
+                "easetype", iTween.EaseType.linear,
+                "time", 0.5f,
+                "onupdate" , "LerpBeetwenMat",
+                "onupdatetarget", this.gameObject));
+
+        // subLight.color = texNow.GetPixel(3, 3);
         for (int i = 0; i < gameObject.transform.childCount; i++) // delete previous
             transform.GetChild(i).gameObject.SetActive(false);
 
@@ -209,7 +232,8 @@ public class LevelGenerator : MonoBehaviour {
             "oncomplete", "GenerateLevel",
             "oncompletetarget", this.gameObject,
            "easetype", iTween.EaseType.easeOutCubic,
-            "time", 1.0f));
+            "time", 0.7f));
+        
     }
 
     public static int StarsAcquired()
@@ -226,5 +250,11 @@ public class LevelGenerator : MonoBehaviour {
 
         else 
             return 1;
+    }
+
+    private void LerpBeetwenMat(float param)
+    {
+        Debug.Log(param);
+        floorMat.SetFloat("_Blend", param);
     }
 }
