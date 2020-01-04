@@ -46,7 +46,7 @@ public class IngameUI : MonoBehaviour
 
     public void UpdateText()
     {
-        ballLeftUI.text = "Balls Left : " + PlayerBehavoir.BallsLeft().ToString();
+        ballLeftUI.text = "x" + PlayerBehavoir.BallsLeft().ToString();
        // Debug.Log("apdejt");
     }
 
