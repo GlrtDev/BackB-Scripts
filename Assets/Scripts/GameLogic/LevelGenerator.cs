@@ -53,7 +53,7 @@ public class LevelGenerator : MonoBehaviour {
                 "oncomplete", "RotateFloor",
                 "oncompletetarget", this.gameObject,
                 "easetype", iTween.EaseType.easeInOutQuint,
-                "time", 1.0f));
+                "time", 0.3f));
     }
      
 	void GenerateLevel ()
@@ -66,7 +66,7 @@ public class LevelGenerator : MonoBehaviour {
 
         //floor.gameObject.transform.localScale = new Vector3(11, 16, 1);
         iTween.ScaleTo(floor.gameObject, iTween.Hash(
-                "scale", new Vector3(11, 16, 1),
+                "scale", new Vector3(10, 15, 1),
                 "easetype", iTween.EaseType.easeInOutQuint,
                 "time", 0.3f));
 
@@ -76,16 +76,18 @@ public class LevelGenerator : MonoBehaviour {
         backgroundMat.mainTexture = texNow;
         Vector2 randOffset = new Vector2(Random.value, Random.value);
         backgroundMat.SetTextureOffset("_FlowMap", randOffset);
+        backgroundMat.SetTextureOffset("_MainTex", randOffset);
+
         cubeMat.mainTexture = texNow;
         floorMat.SetTexture("_TexMat1", floorMat.GetTexture("_TexMat2"));
-        floorMat.SetTexture("_TexMat2", texNow); //new texture
         floorMat.SetFloat("_Blend", 0.0f);
+        floorMat.SetTexture("_TexMat2", texNow); //new texture
         
         iTween.ValueTo(floor.gameObject, iTween.Hash( //lerpingMat
                 "from", 0.0f,
                 "to", 1.0f,
                 "easetype", iTween.EaseType.linear,
-                "time", 0.5f,
+                "time", 0.6f,
                 "onupdate" , "LerpBeetwenMat",
                 "onupdatetarget", this.gameObject));
 
@@ -184,7 +186,6 @@ public class LevelGenerator : MonoBehaviour {
         int currentMap = ++PlayerData.currentLevel;
         GetMap(currentMap);
         CleanPreviousLevel();
-        
     }
 
     private void CollisionHandle() //check if all exits are full
@@ -254,7 +255,6 @@ public class LevelGenerator : MonoBehaviour {
 
     private void LerpBeetwenMat(float param)
     {
-        Debug.Log(param);
         floorMat.SetFloat("_Blend", param);
     }
 }
