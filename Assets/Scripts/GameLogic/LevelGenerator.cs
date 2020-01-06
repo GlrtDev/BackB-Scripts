@@ -79,9 +79,9 @@ public class LevelGenerator : MonoBehaviour {
         backgroundMat.SetTextureOffset("_MainTex", randOffset);
 
         cubeMat.mainTexture = texNow;
-        floorMat.SetTexture("_TexMat1", floorMat.GetTexture("_TexMat2"));
+        floorMat.SetTexture("_MainTex", floorMat.GetTexture("_SecondaryTex"));
         floorMat.SetFloat("_Blend", 0.0f);
-        floorMat.SetTexture("_TexMat2", texNow); //new texture
+        floorMat.SetTexture("_SecondaryTex", texNow); //new texture
         
         iTween.ValueTo(floor.gameObject, iTween.Hash( //lerpingMat
                 "from", 0.0f,
