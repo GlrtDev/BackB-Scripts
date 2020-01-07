@@ -8,7 +8,6 @@ public class PlayerBehavoir : MonoBehaviour
 {
     public Rigidbody rb;
     public ObjectPooler pool;
-    public GameObject[] playerSpawns;
     public static int spawnCount;
     public static int numberOfMoves;
     public IngameUI gameUI;
@@ -38,25 +37,30 @@ public class PlayerBehavoir : MonoBehaviour
         return LevelGenerator.ballsToUse - spawnCount;
     }
 
-    public void MoveBalls(int direction)
+    public static void MoveBalls(TKSwipeRecognizer swipeRecognizer)
     {
-        //pool = GetComponentInParent<ObjectPooler>();
-        // rb = GetComponent<Rigidbody>();
-        numberOfMoves++;
-        playerSpawns = GameObject.FindGameObjectsWithTag("Player");
+        PlayerBehavoir.numberOfMoves++;
+        Debug.Log("num of mov: " + PlayerBehavoir.numberOfMoves);
+        GameObject[] playerSpawns = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject playerSpawn in playerSpawns)
         {
-            rb = playerSpawn.GetComponent<Rigidbody>();
-            switch (direction) {
-                case 0: rb.AddForce(new Vector3(3, 0, 0), ForceMode.Impulse); break;
-                case 1: rb.AddForce(new Vector3(-3, 0, 0), ForceMode.Impulse); break;
-                case 2: rb.AddForce(new Vector3(0, 3, 0), ForceMode.Impulse); break;
-                case 3: rb.AddForce(new Vector3(0, -3, 0), ForceMode.Impulse); break;
+            Rigidbody rb = playerSpawn.GetComponent<Rigidbody>();
+            switch (swipeRecognizer.completedSwipeDirection)
+            {
+                case TKSwipeDirection.Right:
+                    rb.AddForce(new Vector3(3, 0, 0), ForceMode.Impulse);
+                    break;
+                case TKSwipeDirection.Left:
+                    rb.AddForce(new Vector3(-3, 0, 0), ForceMode.Impulse);
+                    break;
+                case TKSwipeDirection.Up:
+                    rb.AddForce(new Vector3(0, 3, 0), ForceMode.Impulse);
+                    break;
+                case TKSwipeDirection.Down:
+                    rb.AddForce(new Vector3(0, -3, 0), ForceMode.Impulse);
+                    break;
             }
-            //rb.AddForce(new Vector3(0, 3, 0), ForceMode.Impulse);
         }
-
-        //Debug.Log("PrintOnEnable: script was start");
     }
 
     private void Awake()
@@ -70,8 +74,9 @@ public class PlayerBehavoir : MonoBehaviour
         pool = GetComponentInParent<ObjectPooler>();
         rb = gameObject.GetComponent<Rigidbody>();
         ++spawnCount;
-        Debug.Log(" LOG: " + spawnCount + " level shit: " + LevelGenerator.ballsToUse);
+       // Debug.Log(" LOG: " + spawnCount + " level shit: " + LevelGenerator.ballsToUse);
         gameUI.UpdateText();
+        
         //if (angle < 360.0f)
         //    angle += 45.0f;
         // else
@@ -85,6 +90,7 @@ public class PlayerBehavoir : MonoBehaviour
     private void OnDisable()
     {
         --spawnCount;
+
         //IngameUI.playerUIEvent.Invoke();
         gameUI.UpdateText();
         //animation of destrofying
@@ -92,31 +98,31 @@ public class PlayerBehavoir : MonoBehaviour
 
     private void Update()
     {
-        if (Input.touchCount > 0)
-        {
-            for (int i = 0; i < Input.touchCount; i++)
-            {
-                Vector3 camPosition = Input.touches[i].position;
-                camPosition.z = 63.9f; // distance from player to camera on Z axis
-                Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
-                Vector3 playerPos = transform.position;
-                touchPos.z = 0; playerPos.z = 0;
-                if ((touchPos - playerPos).magnitude < 0.5f)
-                    if(Input.touches[i].phase == TouchPhase.Began)
-                    Division(); 
-            }
-        }
-        else if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 playerPos = transform.position;
-            Vector3 camPosition = Input.mousePosition;
-            camPosition.z = 63.9f;
-            Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
-            touchPos.z = 0; playerPos.z = 0;
-            if ((touchPos - playerPos).magnitude < 0.5f)
-                Division();
-            Debug.Log("touch: " + touchPos + " player: " + playerPos);
-        }
+        //if (Input.touchCount > 0)
+        //{
+        //    for (int i = 0; i < Input.touchCount; i++)
+        //    {
+        //        Vector3 camPosition = Input.touches[i].position;
+        //        camPosition.z = 63.9f; // distance from player to camera on Z axis
+        //        Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
+        //        Vector3 playerPos = transform.position;
+        //        touchPos.z = 0; playerPos.z = 0;
+        //        if ((touchPos - playerPos).magnitude < 0.5f)
+        //            if(Input.touches[i].phase == TouchPhase.Began)
+        //            Division(); 
+        //    }
+        //}
+        //else if (Input.GetMouseButtonDown(0))
+        //{
+        //    Vector3 playerPos = transform.position;
+        //    Vector3 camPosition = Input.mousePosition;
+        //    camPosition.z = 63.9f;
+        //    Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
+        //    touchPos.z = 0; playerPos.z = 0;
+        //    if ((touchPos - playerPos).magnitude < 0.5f)
+        //        Division();
+        //    //Debug.Log("touch: " + touchPos + " player: " + playerPos);
+        //}
     }
     public void Deactivate()
     {
