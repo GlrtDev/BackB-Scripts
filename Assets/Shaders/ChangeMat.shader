@@ -10,22 +10,32 @@
 			LOD 200
 
 			Pass{
+			 Tags {"LightMode" = "ForwardBase"}
+
 			CGPROGRAM
+
 				#pragma vertex vert
 				#pragma fragment frag
 				#include "UnityCG.cginc"
+				//#include "Lighting.cginc"
+				#include "AutoLight.cginc"
+				#pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+
 				uniform float4 _Color;
-		uniform float4 _LightColor0;
+				uniform float4 _LightColor0;
 				struct vertexInput {
 					float4 vertex : POSITION;
 					float3 normal : NORMAL;
 					fixed2 uv : TEXCOORD0;
+					
 				};
 
 				struct vertexOutput {
 					float4 pos : SV_POSITION;
-					float4 col : COLOR;
+					float3 diff : COLOR0;
+					fixed3 ambient : COLOR1;
 					fixed2 uv : TEXCOORD0;
+					SHADOW_COORDS(6)
 				};
 
 				sampler2D _MainTex;
@@ -36,25 +46,32 @@
 
 				float _Blend;
 
-				vertexOutput vert(vertexInput input) {
+				vertexOutput vert(vertexInput v) {
 					vertexOutput output;
+					
+					//output.col = _Color;
+					output.pos = UnityObjectToClipPos(v.vertex);
+					output.uv = TRANSFORM_TEX(v.uv, _MainTex);
+					half3 worldNormal = UnityObjectToWorldNormal(v.normal);
 
-					float3 normalDirection = UnityObjectToWorldNormal(input.normal);
-					float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz);
-
-					float3 diffuseReflection = _LightColor0.rgb * _Color.rgb
-						* max(0.0, dot(normalDirection, lightDirection));
-					output.col = float4(diffuseReflection, 1.0);
-					output.pos = UnityObjectToClipPos(input.vertex);
-					output.uv = TRANSFORM_TEX(input.uv, _MainTex);
+					half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
+					output.diff =  nl * _LightColor0.rgb;
+					output.ambient = ShadeSH9(half4(worldNormal, 1));
+					TRANSFER_SHADOW(output)
 					return output;
 				}
 
-				fixed4 frag(vertexOutput v) : COLOR{
-				fixed4 col = lerp(tex2D(_MainTex, v.uv),tex2D(_SecondaryTex, v.uv),_Blend) * v.col;
-				return col;
+				fixed4 frag(vertexOutput input) : SV_Target{
+
+					fixed4 col = lerp(tex2D(_MainTex, input.uv),tex2D(_SecondaryTex, input.uv),_Blend);
+					fixed shadow = SHADOW_ATTENUATION(input);
+					fixed3 lighting = input.diff * shadow + input.ambient;
+					col.rgb *= lighting;
+					return col;
 				}
-					ENDCG
+				ENDCG
 			}
+		
 		}
+		//FallBack "Diffuse"
 }
