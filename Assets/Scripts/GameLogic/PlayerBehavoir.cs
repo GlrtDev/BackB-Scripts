@@ -12,13 +12,16 @@ public class PlayerBehavoir : MonoBehaviour
     public static int numberOfMoves;
     public IngameUI gameUI;
     private Vector3 oneUnitVector = new Vector3(0.5f, 0.5f, 0.5f);
-    private bool touchBegan;
     public void Division()
     {
-        if (BallsLeft() > 0) {
+        if (BallsLeft() > 0)
+        {
             numberOfMoves++;
             GameObject DividedBall = pool.GetPooledObject(0);
             DividedBall.transform.position = gameObject.transform.position;
+            Vector3 spawnOffset = rb.velocity.normalized / 100.0f;
+            spawnOffset = new Vector3(spawnOffset.y, spawnOffset.x, spawnOffset.z);
+            DividedBall.transform.position = gameObject.transform.position + spawnOffset;
             Rigidbody rigidbody1 = DividedBall.GetComponent<Rigidbody>();
             DividedBall.SetActive(true);
             rigidbody1.velocity = Quaternion.Euler(0, 0, 90) * rb.velocity;
@@ -106,8 +109,8 @@ public class PlayerBehavoir : MonoBehaviour
             camPosition.z = playerPos.z - Camera.main.transform.position.z;
             Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
             touchPos.z = 0; playerPos.z = 0;
-             ((touchPos - playerPos).magnitude < 0.5f)
-               Division();
+            // if((touchPos - playerPos).magnitude < 0.5f)
+            //   Division();
             //Debug.Log("touch: " + touchPos + " player: " + playerPos);
         }
     }
