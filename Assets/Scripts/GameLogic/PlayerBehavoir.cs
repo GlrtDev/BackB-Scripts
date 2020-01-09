@@ -98,46 +98,16 @@ public class PlayerBehavoir : MonoBehaviour
 
     private void Update()
     {
-        if (Input.touchCount > 0)
-        {
-            for (int i = 0; i < Input.touchCount; i++)
-            {
-                Vector3 camPosition = Input.touches[i].position;
-                // distance from player to camera on Z axis
-                Vector3 playerPos = transform.position;
-                camPosition.z = playerPos.z - Camera.main.transform.position.z;
-                Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
-                
-                
-                touchPos.z = 0; playerPos.z = 0;
-                if ((touchPos - playerPos).magnitude < 0.5f)
-                {
-                    switch (Input.touches[i].phase)
-                    {
-                        case TouchPhase.Ended:
-                            if(touchBegan)
-                                Division();
-                            break;
-                        case TouchPhase.Began:
-                            touchBegan = true;
-                            break;
-                        case TouchPhase.Moved:
-                            touchBegan = false;
-                            break;
-
-                    }
-                }
-            }
-        }
-        else if (Input.GetMouseButtonDown(0))
+       
+        if (Input.GetMouseButtonDown(0))
         {
             Vector3 playerPos = transform.position;
             Vector3 camPosition = Input.mousePosition;
             camPosition.z = playerPos.z - Camera.main.transform.position.z;
             Vector3 touchPos = Camera.main.ScreenToWorldPoint(camPosition);
             touchPos.z = 0; playerPos.z = 0;
-            if ((touchPos - playerPos).magnitude < 0.5f)
-                Division();
+             ((touchPos - playerPos).magnitude < 0.5f)
+               Division();
             //Debug.Log("touch: " + touchPos + " player: " + playerPos);
         }
     }
