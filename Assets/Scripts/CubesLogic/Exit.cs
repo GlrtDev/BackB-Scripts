@@ -28,9 +28,11 @@ public class Exit : Cube
         {
             if (!isFull())
             {
-                iTween.ScaleFrom(this.gameObject, iTween.Hash(
-                "scale", HitScale,
-                "time", 0.5f));
+                transform.localScale = HitScale;
+                iTween.ScaleTo(this.gameObject, iTween.Hash(
+                "scale", startScale,
+                "time", 0.4f,
+                "easeType",iTween.EaseType.easeOutExpo));
                 collision.collider.gameObject.SetActive(false);
                 BallIn();
             }
