@@ -9,6 +9,7 @@ public class moveMixin : CubeMixin
         iTween.MoveBy(cube.gameObject, iTween.Hash(
             "amount", moveVector,
             "speed", speed,
+            "delay", 0.05f,
             "easetype", iTween.EaseType.easeInOutExpo,
             "looptype", iTween.LoopType.pingPong
             ));
