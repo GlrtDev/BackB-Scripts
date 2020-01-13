@@ -11,6 +11,9 @@ public class LevelGenerator : MonoBehaviour {
     public ObjectPooler Pool;
     public ColorToPrefabNumber[] colorMappings;
     public GameObject[] exits;
+    public event System.Action NextLevelStarted;
+    public HintsBase hints;
+    private bool firstRun;
 
     public IngameUI ingameUI;
     public static int ballsToUse;
@@ -28,12 +31,13 @@ public class LevelGenerator : MonoBehaviour {
     // public Light subLight;
 
     void Start () {
+        firstRun = true;
         if (!testGo)
         GetMap(PlayerData.currentLevel); //Uncomment on Relese
-
+        NextLevelStarted += hints.ShowHint;
         PlayerBehavoir.spawnCount = 0;
         GenerateLevel();
-	}
+    }
 
     void GetMap(int currentLevel)
     {
@@ -58,6 +62,10 @@ public class LevelGenerator : MonoBehaviour {
      
 	void GenerateLevel ()
 	{
+        if(firstRun)
+        if (NextLevelStarted != null)
+            NextLevelStarted();
+
         floorNumber.text = PlayerData.currentLevel.ToString();
         iTween.ScaleTo(floorNumber.gameObject, iTween.Hash(
                 "scale", Vector3.one,
@@ -106,10 +114,8 @@ public class LevelGenerator : MonoBehaviour {
         //Count the pixels on the bottom; for game logic
         movesFor3Stars = 0; PlayerBehavoir.numberOfMoves = 0;
         for (int x = 0, y = 0; x < map.width; x++)
-        {
-            
+        {   
                 CheckForPixel(x,y);
-            
         }
         
         GameLogicInit();
@@ -165,7 +171,8 @@ public class LevelGenerator : MonoBehaviour {
 		{
 			if (colorMapping.color.Equals(pixelColor))
 			{
-				Vector3 position = new Vector3(x, y, 100);
+                float zOffset = colorMapping.orderInObjectPool / 1000f; // walkaround to clipping textures-models
+                Vector3 position = new Vector3(x, y, 100 + zOffset);
                 GameObject GO = Pool.GetPooledObject(colorMapping.orderInObjectPool);
                 GO.transform.localPosition = position;
                 GO.transform.rotation = Quaternion.identity;
@@ -186,6 +193,7 @@ public class LevelGenerator : MonoBehaviour {
         int currentMap = ++PlayerData.currentLevel;
         GetMap(currentMap);
         CleanPreviousLevel();
+        firstRun = true;
     }
 
     private void CollisionHandle() //check if all exits are full
@@ -218,7 +226,9 @@ public class LevelGenerator : MonoBehaviour {
     public void RestartLevel()
     {
         iTween.PunchPosition(mainCamera.gameObject, 10 * Vector3.one, 0.5f);
+        firstRun = false;
         GenerateLevel();
+
     }
 
     public int BallsToUse()
