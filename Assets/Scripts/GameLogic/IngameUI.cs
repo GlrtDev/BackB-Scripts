@@ -8,12 +8,9 @@ public class IngameUI : MonoBehaviour
 {
     public LevelGenerator levelGenerator;
     public GameObject summaryUI;
-    public GameObject controlButtons;
     public TMP_Text ballLeftUI;
     public GameObject stars;
     public Image starsFill;
-    //public static PlayerUIEvent playerUIEvent;
-    // Start is called before the first frame update
 
     void Start()
     {
@@ -47,7 +44,6 @@ public class IngameUI : MonoBehaviour
     public void UpdateText()
     {
         ballLeftUI.text = "x" + PlayerBehavoir.BallsLeft().ToString();
-       // Debug.Log("apdejt");
     }
 
     public void GoToMenu()
