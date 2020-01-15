@@ -16,7 +16,9 @@ Move
 green (0,255,0,255) - exit 00FF00
 capacity
 	+1 variant 00FA00
-
+	+2 00F500
+	+3 00F000
+	+4 00EB00
 
 red(255,0,0,0) - killblock FF0000
 
