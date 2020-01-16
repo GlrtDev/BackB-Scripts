@@ -15,14 +15,19 @@ public class LevelUI : MonoBehaviour
     public Image starsImg;
     public TMP_Text buttonText;
     public LevelUiEvent onClicked;
-    
+    public Image levelImg;
+    [SerializeField]
+    private Color colorMask;
     void Start()
     {
         if (level)
             Display(level);
         buttonText = GetComponentInChildren<TMP_Text>();
+        levelImg = GetComponent<Image>();
         buttonText.text = index.ToString();
         starsImg.fillAmount = 0.33f * stars;
+        levelImg.color = Random.ColorHSV(0f,1f, 0.4f,0.7f,0.9f, 1.0f);
+        levelImg.color *= colorMask;
     }
 
     public virtual void Display(Level lvl)
