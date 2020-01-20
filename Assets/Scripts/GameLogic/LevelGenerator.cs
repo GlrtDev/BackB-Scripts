@@ -28,9 +28,15 @@ public class LevelGenerator : MonoBehaviour {
     public Material backgroundMat;
     public Material cubeMat;
     public Material floorMat;
+    private int backgroundCount;
     // public Light subLight;
 
     void Start () {
+        int i = 0;
+        while (Resources.Load<Texture2D>("Backgrounds/Background" + i) != null)
+            i++;
+        backgroundCount = i;
+
         firstRun = true;
         if (!testGo)
         GetMap(PlayerData.currentLevel); //Uncomment on Relese
@@ -78,8 +84,8 @@ public class LevelGenerator : MonoBehaviour {
                 "easetype", iTween.EaseType.easeInOutQuint,
                 "time", 0.3f));
 
-        int nr = PlayerData.currentLevel % 10;
-        Texture2D texNow = Resources.Load<Texture2D>("Backgrounds/Background" + nr); ;
+        int nr = PlayerData.currentLevel % backgroundCount;
+        Texture2D texNow = Resources.Load<Texture2D>("Backgrounds/Background" + nr);
 
         backgroundMat.mainTexture = texNow;
         Vector2 randOffset = new Vector2(Random.value, Random.value);
