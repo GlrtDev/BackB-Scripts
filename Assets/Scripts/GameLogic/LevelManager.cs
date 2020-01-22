@@ -9,9 +9,6 @@ public class LevelManager : MonoBehaviour
     private List<Texture2D> levelPrototypes = new List<Texture2D>();
     public void Awake()
     {
-        SaveData data = SaveGame.Load<SaveData>("data", new SaveData());
-        PlayerData.starNumberPerLevel = data.starNumberPerLevel;
-
         PlayerData.levelPrototypes = LoadLevelsPrototypes();
         //LoadLevelsFromPlayerData();
     }
