@@ -225,7 +225,12 @@ public class LevelGenerator : MonoBehaviour {
         {
             PlayerData.starNumberPerLevel[PlayerData.currentLevel] = StarsAcquired();
         }
-        SaveData newData = new SaveData(PlayerData.starNumberPerLevel);
+        SaveData newData = new SaveData(
+            PlayerData.starNumberPerLevel,
+            PlayerData.unlockedShapes,
+            PlayerData.unlockedTails
+            );
+
         SaveGame.Save<SaveData>("data", newData);
     }
 
