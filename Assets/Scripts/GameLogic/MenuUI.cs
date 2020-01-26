@@ -11,35 +11,36 @@ public class MenuUI : MonoBehaviour
     public GameObject settings;
     public GameObject credits;
     public GameObject menuButton;
+    public GameObject menuButtonBG;
 
     public void GoToLevelSelection()
     {
         DisableAll();
-        levelSelector.SetActive(true); menuButton.SetActive(true);
+        levelSelector.SetActive(true); MenuButtonSetActive(true);
     }
 
     public void GoToPlayerSettings()
     {
         DisableAll();
-        playerSettings.SetActive(true); menuButton.SetActive(true);
+        playerSettings.SetActive(true); MenuButtonSetActive(true);
     }
 
     public void GoToSettings()
     {
         DisableAll();
-        settings.SetActive(true); menuButton.SetActive(true);
+        settings.SetActive(true); MenuButtonSetActive(true);
     }
 
     public void GoToCredits()
     {
         DisableAll();
-        credits.SetActive(true); menuButton.SetActive(true);
+        credits.SetActive(true); MenuButtonSetActive(true);
     }
 
     public void GoToMenu()
     {
         DisableAll();
-        menu.SetActive(true); menuButton.SetActive(false); 
+        menu.SetActive(true); MenuButtonSetActive(false);
     }
 
     public void DisableAll()
@@ -49,6 +50,12 @@ public class MenuUI : MonoBehaviour
         credits.SetActive(false);
         levelSelector.SetActive(false);
         playerSettings.SetActive(false);
+    }
+
+    private void MenuButtonSetActive(bool action)
+    {
+        menuButton.SetActive(action);
+        menuButtonBG.SetActive(action);
     }
     public void NewGame()
     {
