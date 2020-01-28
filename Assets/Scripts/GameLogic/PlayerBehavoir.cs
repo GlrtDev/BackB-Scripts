@@ -12,6 +12,7 @@ public class PlayerBehavoir : MonoBehaviour
     public static int numberOfMoves;
     public IngameUI gameUI;
     private Vector3 oneUnitVector = new Vector3(0.5f, 0.5f, 0.5f);
+
     public void Division()
     {
         if (BallsLeft() > 0)
@@ -114,17 +115,18 @@ public class PlayerBehavoir : MonoBehaviour
             //Debug.Log("touch: " + touchPos + " player: " + playerPos);
         }
     }
+
     public void Deactivate()
     {
         iTween.ScaleTo(this.gameObject, iTween.Hash(
                 "scale", Vector3.zero,
-                "time", 0.1f,
-                "oncomplete", "SetUnactive",
-                "oncompletetarget", this.gameObject
+                "time", 0.5f
                 ));
+        SetUnactive();
     }
+
     private void SetUnactive()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false); 
     }
 }
