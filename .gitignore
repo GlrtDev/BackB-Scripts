@@ -323,4 +323,14 @@ crashlytics-build.properties
 
 /[Aa]ssets/*
 !/[Aa]ssets/Scripts*
+!/[Aa]ssets/Shaders*
 /ProjectSettings/
+Assets/Scripts/CubesLogic.meta
+Assets/Scripts/GameLogic.meta
+Assets/Scripts/CubesLogic/DeathCube.cs.meta
+Assets/Scripts/CubesLogic/Mixin.meta
+Assets/Scripts/CubesLogic/Mixin/CubeMixin.cs.meta
+Assets/Scripts/CubesLogic/Mixin/IncreaseCapacityMixin.cs.meta
+Assets/Scripts/CubesLogic/Mixin/moveMixin.cs.meta
+Assets/Scripts/GameLogic/NavigationButtons.cs.meta
+*.meta
