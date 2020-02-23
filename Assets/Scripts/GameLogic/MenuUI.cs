@@ -39,6 +39,12 @@ public class MenuUI : MonoBehaviour
 
     public void GoToMenu()
     {
+        // make it another script and async function
+        SaveData menuAutoSave = SaveGame.Load<SaveData>("data");
+        menuAutoSave.unlockedShapes = PlayerData.unlockedShapes;
+        menuAutoSave.unlockedTails = PlayerData.unlockedTails;
+        SaveGame.Save<SaveData>("data", menuAutoSave);
+
         DisableAll();
         menu.SetActive(true); MenuButtonSetActive(false);
     }
@@ -62,5 +68,8 @@ public class MenuUI : MonoBehaviour
         SaveData data = new SaveData();
         SaveGame.Save<SaveData>("data", data);
         PlayerData.starNumberPerLevel = data.starNumberPerLevel;
+        PlayerData.unlockedShapes = data.unlockedShapes;
+        PlayerData.unlockedTails = data.unlockedTails;
+        Debug.Log("newgame");
     }
 }
