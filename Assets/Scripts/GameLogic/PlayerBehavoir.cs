@@ -4,6 +4,9 @@ using UnityEngine.Events;
 [System.Serializable]
 public class PlayerUIEvent : UnityEvent { }
 
+[System.Serializable]
+public class PlayerMovedEvent : UnityEvent { }
+
 public class PlayerBehavoir : MonoBehaviour
 {
     public Rigidbody rb;
@@ -12,6 +15,7 @@ public class PlayerBehavoir : MonoBehaviour
     public static int numberOfMoves;
     public IngameUI gameUI;
     private Vector3 oneUnitVector = new Vector3(0.5f, 0.5f, 0.5f);
+    public PlayerMovedEvent playerMovedEvent;
 
     public void Division()
     {
@@ -33,6 +37,7 @@ public class PlayerBehavoir : MonoBehaviour
             iTween.ScaleTo(DividedBall, iTween.Hash(
                 "scale", oneUnitVector,
                 "time", 0.3f));
+             playerMovedEvent.Invoke();
         }
     }
 
@@ -65,6 +70,8 @@ public class PlayerBehavoir : MonoBehaviour
                     break;
             }
         }
+        //this is the worst solution 
+        playerSpawns[0].GetComponent<PlayerBehavoir>().playerMovedEvent.Invoke();
     }
 
     private void Awake()
@@ -79,7 +86,7 @@ public class PlayerBehavoir : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         ++spawnCount;
        // Debug.Log(" LOG: " + spawnCount + " level shit: " + LevelGenerator.ballsToUse);
-        gameUI.UpdateText();
+        gameUI.UpdateBallLeftText();
         
         //if (angle < 360.0f)
         //    angle += 45.0f;
@@ -96,7 +103,7 @@ public class PlayerBehavoir : MonoBehaviour
         --spawnCount;
 
         //IngameUI.playerUIEvent.Invoke();
-        gameUI.UpdateText();
+        gameUI.UpdateBallLeftText();
         //animation of destrofying
     }
 

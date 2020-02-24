@@ -24,6 +24,7 @@ public class LevelGenerator : MonoBehaviour {
     public Camera mainCamera;
 
     public static int movesFor3Stars;
+    public int movesLeft;
     // Use this for initialization
     public Material backgroundMat;
     public Material cubeMat;
@@ -84,8 +85,8 @@ public class LevelGenerator : MonoBehaviour {
                 "easetype", iTween.EaseType.easeInOutQuint,
                 "time", 0.3f));
 
-        int nr = PlayerData.currentLevel % backgroundCount;
-        Texture2D texNow = Resources.Load<Texture2D>("Backgrounds/Background" + nr);
+        int bgNumber = PlayerData.currentLevel % backgroundCount;
+        Texture2D texNow = Resources.Load<Texture2D>("Backgrounds/Background" + bgNumber);
 
         backgroundMat.mainTexture = texNow;
         Vector2 randOffset = new Vector2(Random.value, Random.value);
@@ -109,6 +110,8 @@ public class LevelGenerator : MonoBehaviour {
         for (int i = 0; i < gameObject.transform.childCount; i++) // delete previous
             transform.GetChild(i).gameObject.SetActive(false);
 
+        PlayerBehavoir.numberOfMoves = 0;
+
         for (int x = 0; x < map.width; x++)
 		{
 			for (int y = 1; y < map.height; y++)
@@ -118,7 +121,7 @@ public class LevelGenerator : MonoBehaviour {
 		} //generete current
 
         //Count the pixels on the bottom; for game logic
-        movesFor3Stars = 0; PlayerBehavoir.numberOfMoves = 0;
+        movesFor3Stars = 0; 
         for (int x = 0, y = 0; x < map.width; x++)
         {   
                 CheckForPixel(x,y);
@@ -127,10 +130,12 @@ public class LevelGenerator : MonoBehaviour {
         GameLogicInit();
 
         GameObject playerSpawn = GameObject.FindGameObjectWithTag("Player"); //  Initial Update 
-        playerSpawn.GetComponent<PlayerBehavoir>().gameUI.UpdateText(); //       On gui
+        playerSpawn.GetComponent<PlayerBehavoir>().gameUI.UpdateBallLeftText(); //       On gui
+        movesLeft = movesFor3Stars + 2;
+        ingameUI.UpdateMoveLeftText(movesLeft);
     }
 
-    private void CheckForPixel(int x, int y)
+    private void CheckForPixel(int x, int y) // Bottom pixels for game logic
     {
         Color pixelColor = map.GetPixel(x, y);
         if (pixelColor.a == 0)
@@ -147,7 +152,7 @@ public class LevelGenerator : MonoBehaviour {
             movesFor3Stars += 2;
             return;
         }
-    } // Bottom pixels for game logic
+    } 
 
     private void GameLogicInit()
     {
@@ -190,6 +195,8 @@ public class LevelGenerator : MonoBehaviour {
                 "scale", oneUnitVector,
                 "time", 0.5f,
                 "easeType", iTween.EaseType.easeInOutQuint));
+                if (GO.tag == "Player")
+                    GO.GetComponent<PlayerBehavoir>().playerMovedEvent.AddListener(CheckPlayerMoves);
             }
         }
 	}
@@ -261,19 +268,25 @@ public class LevelGenerator : MonoBehaviour {
     public static int StarsAcquired()
     {
         int unneseseryMoves = PlayerBehavoir.numberOfMoves - movesFor3Stars; // how many moves more than it should be 
-        if (unneseseryMoves <= 0)  
+        if (unneseseryMoves <= 0)
             return 3;
 
         else if (unneseseryMoves == 1)
             return 2;
 
-        else if (unneseseryMoves <= 3)
+        else if (unneseseryMoves <= 2)
             return 1;
-
-        else 
-            return 1;
+        else
+            return 0;
     }
 
+    public void CheckPlayerMoves()
+    {
+        movesLeft = movesFor3Stars + 2 - PlayerBehavoir.numberOfMoves;
+        ingameUI.UpdateMoveLeftText(movesLeft);
+        if (movesLeft <= 0)
+            RestartLevel();
+    }
     private void LerpBeetwenMat(float param)
     {
         floorMat.SetFloat("_Blend", param);

@@ -11,10 +11,10 @@ public class IngameUI : MonoBehaviour
     public TMP_Text ballLeftUI;
     public GameObject stars;
     public Image starsFill;
-
+    public TMP_Text movesLeftUI;
     void Start()
     {
-        UpdateText();
+        UpdateBallLeftText();
         
     }
 
@@ -41,11 +41,15 @@ public class IngameUI : MonoBehaviour
         levelGenerator.RestartLevel();
     }
 
-    public void UpdateText()
+    public void UpdateBallLeftText()
     {
         ballLeftUI.text = "x" + PlayerBehavoir.BallsLeft().ToString();
     }
 
+    public void UpdateMoveLeftText(int movesLeft)
+    {
+        movesLeftUI.text = movesLeft.ToString();
+    }
     public void GoToMenu()
     {
         StartCoroutine(LoadMenuScene());
