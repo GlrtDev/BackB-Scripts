@@ -22,6 +22,7 @@ public class PlayerBehavoir : MonoBehaviour
         if (BallsLeft() > 0)
         {
             numberOfMoves++;
+            playerMovedEvent.Invoke();
             GameObject DividedBall = pool.GetPooledObject(0);
             DividedBall.transform.position = gameObject.transform.position;
             Vector3 spawnOffset = rb.velocity.normalized / 100.0f;
@@ -37,7 +38,11 @@ public class PlayerBehavoir : MonoBehaviour
             iTween.ScaleTo(DividedBall, iTween.Hash(
                 "scale", oneUnitVector,
                 "time", 0.3f));
-             playerMovedEvent.Invoke();
+            // TO DO THIS NEED REFACTORY ; this for adding listeners when dividing to balls that havent been made by level generator
+            DividedBall.GetComponent<PlayerBehavoir>().playerMovedEvent.RemoveAllListeners();
+            DividedBall.GetComponent<PlayerBehavoir>().playerMovedEvent.AddListener(FindObjectOfType<LevelGenerator>().CheckPlayerMoves);
+
+
         }
     }
 
@@ -71,7 +76,7 @@ public class PlayerBehavoir : MonoBehaviour
             }
         }
         //this is the worst solution 
-        playerSpawns[0].GetComponent<PlayerBehavoir>().playerMovedEvent.Invoke();
+        FindObjectOfType<PlayerBehavoir>().playerMovedEvent.Invoke();
     }
 
     private void Awake()
