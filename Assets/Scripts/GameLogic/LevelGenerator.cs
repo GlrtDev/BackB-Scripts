@@ -196,7 +196,10 @@ public class LevelGenerator : MonoBehaviour {
                 "time", 0.5f,
                 "easeType", iTween.EaseType.easeInOutQuint));
                 if (GO.tag == "Player")
+                {
+                    GO.GetComponent<PlayerBehavoir>().playerMovedEvent.RemoveAllListeners();
                     GO.GetComponent<PlayerBehavoir>().playerMovedEvent.AddListener(CheckPlayerMoves);
+                }
             }
         }
 	}
@@ -219,6 +222,7 @@ public class LevelGenerator : MonoBehaviour {
                 ++numberOfFullExits;
             if (numberOfFullExits == exits.GetLength(0))
             {
+                FindObjectOfType<AudioManager>().Play("WinLevel");
                 ingameUI.ShowSummaryUI();
                 SaveThisGo();
             }
@@ -243,6 +247,7 @@ public class LevelGenerator : MonoBehaviour {
 
     public void RestartLevel()
     {
+        FindObjectOfType<AudioManager>().Play("GameRestart");
         iTween.PunchPosition(mainCamera.gameObject, 10 * Vector3.one, 0.5f);
         firstRun = false;
         GenerateLevel();
@@ -284,7 +289,7 @@ public class LevelGenerator : MonoBehaviour {
     {
         movesLeft = movesFor3Stars + 2 - PlayerBehavoir.numberOfMoves;
         ingameUI.UpdateMoveLeftText(movesLeft);
-        if (movesLeft <= 0)
+        if (movesLeft < 0)
             RestartLevel();
     }
     private void LerpBeetwenMat(float param)
