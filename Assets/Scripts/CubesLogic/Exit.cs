@@ -28,6 +28,7 @@ public class Exit : Cube
         {
             if (!isFull())
             {
+                FindObjectOfType<AudioManager>().Play("ExitCollision");
                 transform.localScale = HitScale;
                 iTween.ScaleTo(this.gameObject, iTween.Hash(
                 "scale", startScale,

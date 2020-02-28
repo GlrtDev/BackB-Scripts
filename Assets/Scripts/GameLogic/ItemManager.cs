@@ -7,7 +7,6 @@ public class ItemManager : MonoBehaviour
 {
     public TMP_Text starsAcquiredText;
     public GameObject[] itemPrefabs;
-    
 
     private void OnEnable()
     {
@@ -29,6 +28,7 @@ public class ItemManager : MonoBehaviour
                         PlayerData.unlockedTails.Add(index);
                     }
                     break;
+                
             }
             index++;
         }

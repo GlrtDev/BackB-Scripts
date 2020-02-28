@@ -8,6 +8,7 @@ public class RedCube : Cube
     {
         if(collision.collider.tag == "Player")
         {
+            FindObjectOfType<AudioManager>().Play("RedBoxCollision");
             iTween.ShakeScale(this.gameObject, iTween.Hash(
                 "amount", HitScale,
                 "time", 0.5f));
