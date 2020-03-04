@@ -11,11 +11,11 @@ public class PlayerSkin : MonoBehaviour
         if (PlayerData.currentTail != null)
             trailRenderer.material = PlayerData.currentTail;
         else
-            Debug.Log("no renderer");
+            Debug.LogWarning("no renderer");
 
         if (PlayerData.currentShape != null)
             meshFilter.mesh = PlayerData.currentShape;
         else
-            Debug.Log("no renderer");
+            Debug.LogWarning("no renderer");
     }
 }
