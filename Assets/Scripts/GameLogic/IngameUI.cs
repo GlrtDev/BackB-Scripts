@@ -20,8 +20,13 @@ public class IngameUI : MonoBehaviour
 
     public void ShowSummaryUI()
     {
-        starsFill.fillAmount = 0.33f * LevelGenerator.StarsAcquired();
         summaryUI.SetActive(true);
+        summaryUI.transform.localScale = Vector3.zero;
+        iTween.ScaleTo(summaryUI, iTween.Hash(
+                "scale", Vector3.one,
+                "time", 0.5f,
+                "easetype",iTween.EaseType.easeInOutCubic));
+        starsFill.fillAmount = 0.33f * LevelGenerator.StarsAcquired();
     }
 
     public void NextLevelClick()
@@ -32,7 +37,11 @@ public class IngameUI : MonoBehaviour
 
     private void HideSummaryUI() //TO DO MAKE ANIMATIONS FOR UI
     {
-        summaryUI.SetActive(false);
+        iTween.ScaleTo(summaryUI, iTween.Hash(
+                "scale", Vector3.zero,
+                "time", 0.5f,
+                "easetype", iTween.EaseType.easeInOutCubic));
+        //summaryUI.SetActive(false);
     }
 
     public void RestartClick()
